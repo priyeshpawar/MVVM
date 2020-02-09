@@ -11,6 +11,11 @@ public class NoteEntity(
     var description: String,
 
     var isDone: Boolean
+    /*,
+
+    var priority: Int,
+
+    var something: String*/
 
 ) {
 
