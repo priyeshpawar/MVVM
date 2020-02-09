@@ -10,11 +10,9 @@ import com.example.mvvm.entities.NoteEntity
 public class NoteRepository(application: Application) {
 
     private var noteDao: NoteDao
-    private var allNotes: LiveData<List<NoteEntity>>
 
     init {
         noteDao = AppDatabase.getDatabaseInstance(application).noteDao()
-        allNotes = noteDao.getAllNotes()
     }
 
     public fun insert(note: NoteEntity) {
@@ -33,7 +31,8 @@ public class NoteRepository(application: Application) {
         noteDao.deleteAllNote()
     }
 
-    public fun getAllNotes(): LiveData<List<NoteEntity>>? {
+    public fun getAllNotes(): LiveData<List<NoteEntity>> {
+        val allNotes: LiveData<List<NoteEntity>> = noteDao.getAllNotes()
         return allNotes
     }
 

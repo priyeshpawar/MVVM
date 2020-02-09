@@ -9,11 +9,9 @@ import com.example.mvvm.repositories.NoteRepository
 public class NotesListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val noteRepository: NoteRepository
-    private var allNotes: LiveData<List<NoteEntity>>?
 
     init {
         noteRepository = NoteRepository(application)
-        allNotes = noteRepository.getAllNotes()
     }
 
     public fun insert(note: NoteEntity) {
@@ -32,7 +30,8 @@ public class NotesListViewModel(application: Application) : AndroidViewModel(app
         noteRepository.deleteAllNotes()
     }
 
-    public fun getAllNotes(): LiveData<List<NoteEntity>>? {
+    public fun getAllNotes(): LiveData<List<NoteEntity>> {
+        val allNotes: LiveData<List<NoteEntity>> = noteRepository.getAllNotes()
         return allNotes
     }
 
