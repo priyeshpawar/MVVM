@@ -6,14 +6,14 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "tb_note")
 public class NoteEntity(
 
-    private var title: String,
+    var title: String,
 
-    private var description: String,
+    var description: String,
 
-    private var isDone: Boolean
+    var isDone: Boolean
 
 ) {
 
     @PrimaryKey(autoGenerate = true)
-    private var id: Int = 0
+    var id: Int = 0
 }

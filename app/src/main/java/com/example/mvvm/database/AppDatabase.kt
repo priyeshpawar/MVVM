@@ -1,6 +1,6 @@
 package com.example.mvvm.database
 
-import android.content.Context
+import android.app.Application
 import android.os.AsyncTask
 import androidx.room.Database
 import androidx.room.Room
@@ -15,19 +15,18 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         private var dbInstance: AppDatabase? = null
 
-        fun getDatabaseInstance(context: Context): AppDatabase {
+        fun getDatabaseInstance(application: Application): AppDatabase {
             var db: AppDatabase? = dbInstance
 
             if (db == null) {
                 db = Room.databaseBuilder(
-                    context, AppDatabase::class.java, "mvvm_database"
+                    application, AppDatabase::class.java, "mvvm_database"
                 ).addCallback(roomCallback).build();
             }
-            dbInstance = db
             return db;
         }
 
-        private var roomCallback: RoomDatabase.Callback = object : RoomDatabase.Callback() {
+        private var roomCallback: Callback = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 PopulateNotesAsyncTask(dbInstance?.noteDao()).execute()
@@ -47,5 +46,6 @@ abstract class AppDatabase : RoomDatabase() {
     }
 
     abstract fun noteDao(): NoteDao
+
 
 }

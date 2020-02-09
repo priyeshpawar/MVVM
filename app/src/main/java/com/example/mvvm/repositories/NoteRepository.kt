@@ -1,16 +1,21 @@
 package com.example.mvvm.repositories
 
-import android.content.Context
+import android.app.Application
 import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 import com.example.mvvm.daos.NoteDao
 import com.example.mvvm.database.AppDatabase
 import com.example.mvvm.entities.NoteEntity
 
-public class NoteRepository(context: Context) {
+public class NoteRepository(application: Application) {
 
-    private var noteDao: NoteDao = AppDatabase.getDatabaseInstance(context).noteDao()
-    private var allNotes: LiveData<List<NoteEntity>> = noteDao.getAllNotes()
+    private var noteDao: NoteDao
+    private var allNotes: LiveData<List<NoteEntity>>
+
+    init {
+        noteDao = AppDatabase.getDatabaseInstance(application).noteDao()
+        allNotes = noteDao.getAllNotes()
+    }
 
     public fun insert(note: NoteEntity) {
         InsertNoteAsyncTask(noteDao).execute(note)
@@ -24,7 +29,11 @@ public class NoteRepository(context: Context) {
         DeleteNoteAsyncTast(noteDao).execute(note)
     }
 
-    public fun getAllNotes(): LiveData<List<NoteEntity>> {
+    public fun deleteAllNotes() {
+        noteDao.deleteAllNote()
+    }
+
+    public fun getAllNotes(): LiveData<List<NoteEntity>>? {
         return allNotes
     }
 
