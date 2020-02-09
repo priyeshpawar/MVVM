@@ -1,9 +1,11 @@
 package com.example.mvvm.database
 
 import android.content.Context
+import android.os.AsyncTask
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.mvvm.daos.NoteDao
 import com.example.mvvm.entities.NoteEntity
 
@@ -18,16 +20,32 @@ abstract class AppDatabase : RoomDatabase() {
 
             if (db == null) {
                 db = Room.databaseBuilder(
-                    context,
-                    AppDatabase::class.java,
-                    "mvvm_database"
-                ).build();
+                    context, AppDatabase::class.java, "mvvm_database"
+                ).addCallback(roomCallback).build();
             }
+            dbInstance = db
             return db;
         }
+
+        private var roomCallback: RoomDatabase.Callback = object : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                PopulateNotesAsyncTask(dbInstance?.noteDao()).execute()
+            }
+        }
+
+        private class PopulateNotesAsyncTask(private var noteDao: NoteDao?) :
+            AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg params: Void): Void? {
+                noteDao?.insertNote(NoteEntity("Title 1", "sekrnvwaekbjgkwauebgkwabeg", false))
+                noteDao?.insertNote(NoteEntity("Title 2", "sekrnvwaekbjgkwauebgkwabeg", false))
+                noteDao?.insertNote(NoteEntity("Title 3", "sekrnvwaekbjgkwauebgkwabeg", false))
+                return null
+            }
+        }
+
     }
 
     abstract fun noteDao(): NoteDao
-
 
 }
