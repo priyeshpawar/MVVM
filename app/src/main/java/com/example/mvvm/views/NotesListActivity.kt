@@ -1,13 +1,13 @@
 package com.example.mvvm.views
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvm.R
+import com.example.mvvm.adapters.NotesAdapter
 import com.example.mvvm.entities.NoteEntity
 import com.example.mvvm.viewmodels.NotesListViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -42,7 +42,7 @@ class NotesListActivity : AppCompatActivity() {
         viewModel.getAllNotes().observe(this, Observer<List<NoteEntity>> { notes ->
             if (notes != null) {
                 for (note in notes) {
-                    Log.d("notes", note.title)
+                    rvNotes.adapter = NotesAdapter(this, notes)
                 }
             }
         })
