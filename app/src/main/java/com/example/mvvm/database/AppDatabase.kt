@@ -4,13 +4,11 @@ import android.app.Application
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.mvvm.daos.NoteDao
 import com.example.mvvm.entities.NoteEntity
 
 @Database(entities = arrayOf(NoteEntity::class), version = 1)
-abstract class AppDatabase : RoomDatabase() {
+public abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         private var dbInstance: AppDatabase? = null
@@ -19,15 +17,15 @@ abstract class AppDatabase : RoomDatabase() {
             var db: AppDatabase? = dbInstance
 
             if (db == null) {
-                db = Room.databaseBuilder(
-                    application, AppDatabase::class.java, "mvvm_database"
-                )
+                db = Room.databaseBuilder(application, AppDatabase::class.java, "mvvm_database")
 //                    .addMigrations(migration_1_2, migration_2_3)
-                    .build();
+//                    .addCallback(roomCallback)
+                    .build()
             }
-            return db;
+            dbInstance = db
+            return db
         }
-
+//
 //        var migration_1_2: Migration = object : Migration(1, 2) {
 //            override fun migrate(database: SupportSQLiteDatabase) {
 //                database.execSQL("ALTER TABLE tb_note ADD COLUMN priority INTEGER DEFAULT 0 NOT NULL")
@@ -60,6 +58,4 @@ abstract class AppDatabase : RoomDatabase() {
     }
 
     abstract fun noteDao(): NoteDao
-
-
 }

@@ -15,25 +15,24 @@ public class NoteRepository(application: Application) {
         noteDao = AppDatabase.getDatabaseInstance(application).noteDao()
     }
 
-    public fun insert(note: NoteEntity) {
+    fun insert(note: NoteEntity) {
         InsertNoteAsyncTask(noteDao).execute(note)
     }
 
-    public fun update(note: NoteEntity) {
+    fun update(note: NoteEntity) {
         UpdateNoteAsyncTast(noteDao).execute(note)
     }
 
-    public fun delete(note: NoteEntity) {
+    fun delete(note: NoteEntity) {
         DeleteNoteAsyncTast(noteDao).execute(note)
     }
 
-    public fun deleteAllNotes() {
+    fun deleteAllNotes() {
         noteDao.deleteAllNote()
     }
 
-    public fun getAllNotes(): LiveData<List<NoteEntity>> {
-        val allNotes: LiveData<List<NoteEntity>> = noteDao.getAllNotes()
-        return allNotes
+    fun getAllNotes(): LiveData<List<NoteEntity>> {
+        return noteDao.getAllNotes()
     }
 
     private class InsertNoteAsyncTask(private var noteDao: NoteDao) :
