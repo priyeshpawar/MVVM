@@ -21,4 +21,7 @@ interface NoteDao {
 
     @Query("SELECT * FROM tb_note")
     fun getAllNotes(): LiveData<List<NoteEntity>>
+
+    @Query("SELECT COUNT(id) FROM tb_note")
+    fun getCount(): Int
 }

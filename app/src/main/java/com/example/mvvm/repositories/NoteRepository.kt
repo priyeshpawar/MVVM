@@ -10,6 +10,7 @@ import com.example.mvvm.entities.NoteEntity
 public class NoteRepository(application: Application) {
 
     private var noteDao: NoteDao
+    private var rowCount: Int = 0
 
     init {
         noteDao = AppDatabase.getDatabaseInstance(application).noteDao()
@@ -23,16 +24,21 @@ public class NoteRepository(application: Application) {
         UpdateNoteAsyncTast(noteDao).execute(note)
     }
 
-    fun delete(note: NoteEntity) {
+    fun delete(note: NoteEntity?) {
         DeleteNoteAsyncTast(noteDao).execute(note)
     }
 
     fun deleteAllNotes() {
-        noteDao.deleteAllNote()
+        DeleteAllNotesAsyncTast(noteDao).execute()
     }
 
     fun getAllNotes(): LiveData<List<NoteEntity>> {
         return noteDao.getAllNotes()
+    }
+
+    fun getCount(): Int {
+        GetCountAsyncTask(noteDao, rowCount).execute()
+        return rowCount
     }
 
     private class InsertNoteAsyncTask(private var noteDao: NoteDao) :
@@ -42,7 +48,6 @@ public class NoteRepository(application: Application) {
             noteDao.insertNote(params[0])
             return null
         }
-
     }
 
     private class UpdateNoteAsyncTast(private var noteDao: NoteDao) :
@@ -52,7 +57,6 @@ public class NoteRepository(application: Application) {
             noteDao.updateNote(params[0])
             return null
         }
-
     }
 
     private class DeleteNoteAsyncTast(private var noteDao: NoteDao) :
@@ -61,7 +65,23 @@ public class NoteRepository(application: Application) {
             noteDao.deleteNote(params[0])
             return null
         }
+    }
 
+    private class GetCountAsyncTask(
+        var noteDao: NoteDao, var rowCount: Int
+    ) : AsyncTask<Void, Void, Void>() {
+        override fun doInBackground(vararg params: Void?): Void? {
+            rowCount = noteDao.getCount()
+            return null
+        }
+    }
+
+    private class DeleteAllNotesAsyncTast(private var noteDao: NoteDao) :
+        AsyncTask<Void, Void, Void>() {
+        override fun doInBackground(vararg params: Void?): Void? {
+            noteDao.deleteAllNote()
+            return null
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.mvvm.views
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvm.R
 import com.example.mvvm.adapters.NotesAdapter
 import com.example.mvvm.entities.NoteEntity
+import com.example.mvvm.utilities.RecyclerViewOnClickListner
 import com.example.mvvm.viewmodels.NotesListViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -40,15 +42,17 @@ class NotesListActivity : AppCompatActivity() {
     private fun setDefaults() {
         rvNotes.layoutManager = LinearLayoutManager(this)
         viewModel.getAllNotes().observe(this, Observer<List<NoteEntity>> { notes ->
-            if (notes != null) {
-                for (note in notes) {
-                    rvNotes.adapter = NotesAdapter(this, notes)
-                }
-            }
+            if (notes != null)
+                rvNotes.adapter =
+                    NotesAdapter(this, notes, object : RecyclerViewOnClickListner {
+                        override fun onClick(position: Int, view: View) {
+                            viewModel.showAddNoteDialog(this@NotesListActivity, notes[position])
+                        }
+                    })
         })
     }
 
     private fun setEventHandlers() {
-        fabAddNote.setOnClickListener { viewModel.showAddNoteDialog(this@NotesListActivity) }
+        fabAddNote.setOnClickListener { viewModel.showAddNoteDialog(this@NotesListActivity, null) }
     }
 }

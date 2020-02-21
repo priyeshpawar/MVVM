@@ -5,19 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvm.R
 import com.example.mvvm.entities.NoteEntity
+import com.example.mvvm.utilities.RecyclerViewOnClickListner
 
-class NotesAdapter(private val context: Context, private val notesList: List<NoteEntity>) :
-    RecyclerView.Adapter<NotesAdapter.MyViewHolder>(), View.OnClickListener {
+class NotesAdapter(
+    private val context: Context,
+    private val notesList: List<NoteEntity>,
+    private val clickListner: RecyclerViewOnClickListner
+) :
+    RecyclerView.Adapter<NotesAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val layoutInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layoutInflater: LayoutInflater =
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view: View = layoutInflater.inflate(R.layout.list_row_notes, parent, false)
-        view.setOnClickListener(this)
         return MyViewHolder(view)
     }
 
@@ -31,6 +35,8 @@ class NotesAdapter(private val context: Context, private val notesList: List<Not
 
         if (note.isDone) holder.cvMainLayout.setBackgroundColor(context.resources.getColor(R.color.greenLight))
         else holder.cvMainLayout.setBackgroundColor(context.resources.getColor(R.color.redLight))
+
+        holder.bind(position, clickListner)
     }
 
     override fun getItemCount(): Int {
@@ -42,13 +48,13 @@ class NotesAdapter(private val context: Context, private val notesList: List<Not
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         val cvMainLayout: CardView = itemView.findViewById(R.id.cv_main_layout)
         val tvDescription: TextView = itemView.findViewById(R.id.tv_description)
         val tvTitle: TextView = itemView.findViewById(R.id.tv_title)
-    }
 
-    override fun onClick(v: View?) {
-        Toast.makeText(context, "clicked", Toast.LENGTH_LONG).show()
+        fun bind(position: Int, clickListner: RecyclerViewOnClickListner) {
+            cvMainLayout.setOnClickListener { v -> clickListner.onClick(position, v) }
+        }
     }
-
 }
