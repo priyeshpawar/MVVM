@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "tb_note")
-public class NoteEntity(
+class NoteEntity(
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
@@ -21,6 +21,4 @@ public class NoteEntity(
 
     var something: String*/
 
-) {
-
-}
+)

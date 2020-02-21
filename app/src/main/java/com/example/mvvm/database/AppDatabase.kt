@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import com.example.mvvm.daos.NoteDao
 import com.example.mvvm.entities.NoteEntity
 
-@Database(entities = arrayOf(NoteEntity::class), version = 1)
-public abstract class AppDatabase : RoomDatabase() {
+@Database(entities = [NoteEntity::class], version = 1)
+abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         private var dbInstance: AppDatabase? = null

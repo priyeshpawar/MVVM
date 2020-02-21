@@ -7,14 +7,10 @@ import com.example.mvvm.daos.NoteDao
 import com.example.mvvm.database.AppDatabase
 import com.example.mvvm.entities.NoteEntity
 
-public class NoteRepository(application: Application) {
+class NoteRepository(application: Application) {
 
-    private var noteDao: NoteDao
+    private var noteDao: NoteDao = AppDatabase.getDatabaseInstance(application).noteDao()
     private var rowCount: Int = 0
-
-    init {
-        noteDao = AppDatabase.getDatabaseInstance(application).noteDao()
-    }
 
     fun insert(note: NoteEntity) {
         InsertNoteAsyncTask(noteDao).execute(note)
